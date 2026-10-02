@@ -199,8 +199,9 @@ function pintarFicha(f, datos, card, respuestas = {}, mensajeEditado = null) {
   card = card || (() => { const d = document.createElement('div'); d.className = 'card'; $('chat').appendChild(d); return d; })();
   const mensaje = mensajeEditado ?? f.mensaje_cliente;
   const todos = f.avisos || [];
-  const limpieza = todos.find((a) => a.startsWith('He quitado'));
-  const avisos = todos.filter((a) => a !== limpieza);
+  const sobreMensaje = todos.filter((a) => a.startsWith('He quitado') || a.startsWith('El mensaje al cliente'));
+  const limpieza = sobreMensaje.join(' ');
+  const avisos = todos.filter((a) => !sobreMensaje.includes(a));
   card.innerHTML = `<h3>${esc(f.tipo_documento)}</h3><div class="org">${esc(f.organismo)}</div>
   ${bloquePlazo(f)}
   <div class="msgh">Mensaje para el cliente</div><textarea class="msg">${esc(mensaje)}</textarea>
