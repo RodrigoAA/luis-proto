@@ -74,13 +74,13 @@ details.ej summary{cursor:pointer;color:#075e54;font-weight:600}
 
 <main id="m" hidden>
   <div class="b in">Hola, Luis. Mándame el PDF o la foto de la carta y te preparo el plazo y el mensaje para el cliente. No se envía nada sin que lo revises.</div>
-  <details class="b in ej"><summary>Probar con un documento de ejemplo</summary>
-    <a href="/ejemplos/01-diligencia-ordenacion.pdf" download>Diligencia de ordenación</a>
-    <a href="/ejemplos/02-decreto-senalamiento-vista.pdf" download>Decreto de señalamiento de vista</a>
-    <a href="/ejemplos/03-sentencia.pdf" download>Sentencia</a>
-    <a href="/ejemplos/04-requerimiento-aeat.pdf" download>Requerimiento de Hacienda</a>
-    <a href="/ejemplos/05-reclamacion-deuda-tgss.pdf" download>Reclamación de la Seguridad Social</a>
-    <a href="/ejemplos/06-email-procurador.pdf" download>Email del procurador</a>
+  <details class="b in ej"><summary>Probar con un documento de ejemplo</summary><small style="color:#667">Son inventados. Toca uno y te preparo la ficha.</small>
+    <a href="/ejemplos/01-diligencia-ordenacion.pdf" data-ej>Diligencia de ordenación</a>
+    <a href="/ejemplos/02-decreto-senalamiento-vista.pdf" data-ej>Decreto de señalamiento de vista</a>
+    <a href="/ejemplos/03-sentencia.pdf" data-ej>Sentencia</a>
+    <a href="/ejemplos/04-requerimiento-aeat.pdf" data-ej>Requerimiento de Hacienda</a>
+    <a href="/ejemplos/05-reclamacion-deuda-tgss.pdf" data-ej>Reclamación de la Seguridad Social</a>
+    <a href="/ejemplos/06-email-procurador.pdf" data-ej>Email del procurador</a>
   </details>
   <div id="chat"></div>
   <p class="note">Prototipo con documentos inventados.</p>
@@ -150,6 +150,11 @@ async function enviar(file) {
     espera.classList.add('err'); espera.textContent = e.message;
   }
 }
+document.querySelectorAll('[data-ej]').forEach((a) => (a.onclick = async (e) => {
+  e.preventDefault();
+  const b = await (await fetch(a.getAttribute('href'))).blob();
+  enviar(new File([b], a.getAttribute('href').split('/').pop(), { type: 'application/pdf' }));
+}));
 $('fPdf').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) enviar(f); };
 $('fFoto').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) enviar(f); };
 
