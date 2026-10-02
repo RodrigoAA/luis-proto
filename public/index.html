@@ -39,8 +39,30 @@ textarea.msg:focus{outline:none;border-color:#25d366;background:#fff}
 #login button{width:100%;padding:11px;background:#075e54;color:#fff;border:0;border-radius:8px;font-size:15px;font-weight:600}
 .ej a{display:block;color:#075e54;margin:3px 0}
 .toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:#222;color:#fff;padding:8px 14px;border-radius:16px;font-size:13px;opacity:0;transition:opacity .2s;z-index:5}.toast.on{opacity:.92}
+
+/* v2: ficha simplificada */
+.card h3{font-size:17px}.org{color:#667;font-size:13px}
+.deadline{margin:12px 0 4px;padding:10px 12px;border-radius:10px;background:#fdecea;border:0}
+.deadline .lbl{font-size:12px;color:#8e2a22}.deadline .d{font-size:22px;font-weight:700;color:#c62828;line-height:1.2}
+.deadline .what{font-size:13px;color:#6b2a24;margin-top:2px}
+.deadline.none{background:#eef6f0}.deadline.none .d{color:#2e7d32;font-size:17px}.deadline.none .what{color:#2e5a35}
+.ask{background:#e8f1fb;border:0;border-radius:10px;padding:10px 12px;margin:12px 0 4px;font-size:14px}
+.ask .lbl{font-size:12px;color:#1d4f8a}.ask .q{font-weight:600;margin-top:2px}
+.ask .opts{display:flex;gap:8px;margin-top:8px}.ask button{flex:1;border:1px solid #1976d2;background:#fff;color:#1976d2;border-radius:18px;padding:8px 10px;font-size:14px;font-weight:600}
+.ask input{flex:1;padding:7px;border:1px solid #9bbbe0;border-radius:8px;font-size:14px}
+.msgh{font-size:12px;color:#667;margin:14px 0 4px}
+.clean{font-size:12px;color:#8a5a00;margin-top:4px}
+.actions{display:flex;gap:10px;align-items:center;margin-top:8px}
+.actions .wa{flex:1;background:#25d366;color:#073b1e;padding:11px;border-radius:10px;font-weight:700;text-align:center;text-decoration:none;font-size:15px}
+.actions .copy{flex:0 0 auto;background:none;border:0;color:#075e54;font-size:14px;font-weight:600;padding:8px}
+details.more{margin-top:12px;border-top:1px solid #eee;padding-top:8px;font-size:13px;color:#333}
+details.more summary{color:#667;cursor:pointer;font-size:13px;list-style:none}details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"▸ "}details.more[open] summary::before{content:"▾ "}
+details.more dl{margin:8px 0 0}details.more dt{font-size:11px;color:#889;margin-top:8px}details.more dd{margin:1px 0 0}
+details.more ul{padding-left:16px;margin:2px 0}
+details.ej summary{cursor:pointer;color:#075e54;font-weight:600}
 </style></head><body>
-<header><div><b>Despacho · asistente</b><span>Sube lo que te llegue y te preparo la ficha</span></div><a href="#" id="salir" hidden>Salir</a></header>
+<header><div><b>Despacho · asistente</b></div><a href="#" id="salir" hidden>Salir</a></header>
 
 <div id="login" hidden>
   <b>Código de acceso</b>
@@ -51,25 +73,25 @@ textarea.msg:focus{outline:none;border-color:#25d366;background:#fff}
 </div>
 
 <main id="m" hidden>
-  <div class="b in">Hola, Luis. Mándame un PDF de LexNET, de la DEHú o de la Seguridad Social, o hazle una foto a una carta, y te preparo la ficha con el plazo y el mensaje para el cliente. Tú lo revisas antes de mandar nada.</div>
-  <div class="b in ej"><b>¿Sin documentos a mano?</b> Descarga uno de ejemplo (son inventados) y súbelo:
-    <a href="/ejemplos/01-diligencia-ordenacion.pdf" download>1 · Diligencia de ordenación</a>
-    <a href="/ejemplos/02-decreto-senalamiento-vista.pdf" download>2 · Decreto de señalamiento de vista</a>
-    <a href="/ejemplos/03-sentencia.pdf" download>3 · Sentencia</a>
-    <a href="/ejemplos/04-requerimiento-aeat.pdf" download>4 · Requerimiento de Hacienda</a>
-    <a href="/ejemplos/05-reclamacion-deuda-tgss.pdf" download>5 · Reclamación de la Seguridad Social</a>
-    <a href="/ejemplos/06-email-procurador.pdf" download>6 · Email del procurador</a>
-  </div>
+  <div class="b in">Hola, Luis. Mándame el PDF o la foto de la carta y te preparo el plazo y el mensaje para el cliente. No se envía nada sin que lo revises.</div>
+  <details class="b in ej"><summary>Probar con un documento de ejemplo</summary>
+    <a href="/ejemplos/01-diligencia-ordenacion.pdf" download>Diligencia de ordenación</a>
+    <a href="/ejemplos/02-decreto-senalamiento-vista.pdf" download>Decreto de señalamiento de vista</a>
+    <a href="/ejemplos/03-sentencia.pdf" download>Sentencia</a>
+    <a href="/ejemplos/04-requerimiento-aeat.pdf" download>Requerimiento de Hacienda</a>
+    <a href="/ejemplos/05-reclamacion-deuda-tgss.pdf" download>Reclamación de la Seguridad Social</a>
+    <a href="/ejemplos/06-email-procurador.pdf" download>Email del procurador</a>
+  </details>
   <div id="chat"></div>
-  <p class="note">Prototipo. Las fechas son propuestas: siempre las confirma el despacho. <a href="/maqueta">Ver la maqueta original</a></p>
+  <p class="note">Prototipo con documentos inventados.</p>
 </main>
 
 <div class="bar" id="bar" hidden><div class="in2">
   <div class="row">
-    <label>📄 Subir PDF<input type="file" id="fPdf" accept="application/pdf"></label>
-    <label class="alt">📷 Foto de carta<input type="file" id="fFoto" accept="image/*" capture="environment"></label>
+    <label>Subir PDF<input type="file" id="fPdf" accept="application/pdf"></label>
+    <label class="alt">Foto de carta<input type="file" id="fFoto" accept="image/*" capture="environment"></label>
   </div>
-  <div class="warn2">Prototipo: no subas documentos reales sin tapar nombres, DNI, nº de procedimiento y NIG.</div>
+  <div class="warn2">Tapa nombres, DNI, nº de procedimiento y NIG antes de subir algo real.</div>
 </div></div>
 <div class="toast" id="toast"></div>
 
@@ -131,44 +153,66 @@ async function enviar(file) {
 $('fPdf').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) enviar(f); };
 $('fFoto').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) enviar(f); };
 
+const UNI = { 'hábiles': 'días hábiles', naturales: 'días naturales', meses: 'meses' };
 function bloquePlazo(f) {
+  if (f.pregunta && f.pregunta.tipo !== 'nota') return bloquePregunta(f);
+  const nota = f.pregunta ? `<div class="ask"><div class="q">${esc(f.pregunta.texto)}</div></div>` : '';
+  return plazo(f) + nota;
+}
+function plazo(f) {
   if (f.estado_plazo === 'calculada' || f.estado_plazo === 'en_documento') {
-    const det = f.estado_plazo === 'en_documento' ? 'Fecha que trae el propio documento' : `${f.plazo.dias} ${f.plazo.unidad === 'hábiles' ? 'días hábiles' : f.plazo.unidad}${f.plazo.descripcion ? ' · ' + esc(f.plazo.descripcion) : ''}`;
-    return `<div class="deadline"><div class="d">${fmt(f.vence)}<span class="tag">Propuesto · confírmalo</span></div><small><b>${det}</b>${f.gracia ? ' · gracia hasta ' + fmt(f.gracia) : ''}</small><small>${esc(f.linea_plazo)}</small></div>`;
+    const what = f.plazo.descripcion ? esc(f.plazo.descripcion.charAt(0).toUpperCase() + f.plazo.descripcion.slice(1)) : '';
+    return `<div class="deadline"><div class="lbl">Vence · confírmalo</div><div class="d">${fmt(f.vence)}</div>${what ? `<div class="what">${what}</div>` : ''}</div>`;
   }
-  if (f.estado_plazo === 'sin_plazo') return `<div class="deadline none"><div class="d">Sin plazo para tu cliente</div><small>${esc(f.linea_plazo)}</small></div>`;
-  return `<div class="deadline wait"><div class="d">Plazo pendiente: falta un dato</div><small>${esc(f.linea_plazo || '')}</small></div>`;
+  if (f.estado_plazo === 'sin_plazo') return `<div class="deadline none"><div class="d">Sin plazo para tu cliente</div></div>`;
+  return `<div class="ask"><div class="lbl">No puedo calcular el plazo</div><div class="q">${esc(f.linea_plazo || 'Falta un dato del documento.')}</div></div>`;
 }
 
 function bloquePregunta(f) {
-  const p = f.pregunta; if (!p) return '';
-  if (p.tipo === 'parte') return `<div class="ask"><b>Antes de seguir:</b> ${esc(p.texto)}<div class="opts"><button data-r="demandante">Demandante</button><button data-r="demandado">Demandado</button></div></div>`;
-  if (p.tipo === 'fecha') return `<div class="ask"><b>Antes de seguir:</b> ${esc(p.texto)}<div class="opts"><input type="date" data-f><button data-calc>Calcular plazo</button></div></div>`;
-  return `<div class="ask">${esc(p.texto)}</div>`;
+  const p = f.pregunta;
+  const head = `<div class="lbl">Para calcular el plazo</div><div class="q">${esc(p.texto)}</div>`;
+  if (p.tipo === 'parte') return `<div class="ask">${head}<div class="opts"><button data-r="demandante">Demandante</button><button data-r="demandado">Demandado</button></div></div>`;
+  if (p.tipo === 'fecha') return `<div class="ask">${head}<div class="opts"><input type="date" data-f><button data-calc>Calcular</button></div></div>`;
+  return `<div class="ask">${head}</div>`;
+}
+
+function detalle(f, avisos) {
+  const filas = [];
+  if (f.resumen) filas.push(['Resumen', esc(f.resumen)]);
+  if ((f.que_hacer || []).length) filas.push(['Qué hay que hacer', `<ul>${f.que_hacer.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`]);
+  if (f.procedimiento) filas.push(['Procedimiento', esc(f.procedimiento)]);
+  if (f.fecha_notificacion) filas.push(['Notificado', fmt(f.fecha_notificacion) + (f.canal ? ' · ' + esc(f.canal) : '')]);
+  if (f.vence) {
+    const det = f.estado_plazo === 'en_documento' ? 'Fecha que trae el propio documento.' : esc(f.linea_plazo || `${f.plazo.dias ?? ''} ${UNI[f.plazo.unidad] || f.plazo.unidad || ''}`);
+    filas.push(['Cómo se ha contado', det + (f.gracia && !/gracia/i.test(f.linea_plazo || '') ? ` Día de gracia hasta ${fmt(f.gracia)}.` : '')]);
+  }
+  if (avisos.length) filas.push(['Avisos', `<ul>${avisos.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>`]);
+  return `<details class="more"><summary>Ver detalle</summary><dl>${filas.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl></details>`;
 }
 
 function pintarFicha(f, datos, card, respuestas = {}, mensajeEditado = null) {
   card = card || (() => { const d = document.createElement('div'); d.className = 'card'; $('chat').appendChild(d); return d; })();
   const mensaje = mensajeEditado ?? f.mensaje_cliente;
-  card.innerHTML = `<div class="kind">${f.origen_fecha === 'en_documento' ? 'Fecha leída del documento' : 'Ficha'} · ${esc(f.canal || '')}</div><h3>${esc(f.tipo_documento)}</h3><div class="org">${esc(f.organismo)}${f.procedimiento ? ' · ' + esc(f.procedimiento) : ''}</div>
-  ${f.fecha_notificacion ? `<div class="org">Notificado: ${fmt(f.fecha_notificacion)}</div>` : ''}
-  ${bloquePlazo(f)}${bloquePregunta(f)}
-  <div style="margin-top:8px">${esc(f.resumen)}</div>
-  <div class="sec">Qué hay que hacer</div><ul>${(f.que_hacer || []).map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
-  ${(f.avisos || []).map((a) => `<div class="warn">⚠︎ ${esc(a)}</div>`).join('')}
-  <div class="sec">Mensaje para el cliente (puedes editarlo)</div><textarea class="msg">${esc(mensaje)}</textarea>
-  <div class="actions"><button class="fix" data-fix>Corregir</button><button class="send" data-copy>Copiar mensaje</button></div>
-  <div class="actions"><a class="wa" data-wa target="_blank" rel="noopener">Abrir WhatsApp con el mensaje</a></div>`;
+  const todos = f.avisos || [];
+  const limpieza = todos.find((a) => a.startsWith('He quitado'));
+  const avisos = todos.filter((a) => a !== limpieza);
+  card.innerHTML = `<h3>${esc(f.tipo_documento)}</h3><div class="org">${esc(f.organismo)}</div>
+  ${bloquePlazo(f)}
+  <div class="msgh">Mensaje para el cliente</div><textarea class="msg">${esc(mensaje)}</textarea>
+  ${limpieza ? `<div class="clean">${esc(limpieza)}</div>` : ''}
+  <div class="actions"><a class="wa" data-wa target="_blank" rel="noopener">Enviar por WhatsApp</a><button class="copy" data-copy>Copiar</button></div>
+  ${detalle(f, avisos)}`;
   const ta = card.querySelector('textarea');
   let editado = mensajeEditado !== null;
   const wa = card.querySelector('[data-wa]');
+  const crecer = () => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 2 + 'px'; };
+  requestAnimationFrame(crecer);
   const actWa = () => { wa.href = 'https://wa.me/?text=' + encodeURIComponent(ta.value); };
   actWa();
-  ta.oninput = () => { editado = true; actWa(); };
-  card.querySelector('[data-fix]').onclick = () => { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); toast('Edita el mensaje y la fecha si hace falta'); };
+  ta.oninput = () => { editado = true; actWa(); crecer(); };
   card.querySelector('[data-copy]').onclick = async () => {
     try { await navigator.clipboard.writeText(ta.value); } catch { ta.select(); document.execCommand('copy'); }
-    toast('Mensaje copiado. Pégalo en WhatsApp');
+    toast('Mensaje copiado');
   };
   const recalcular = async (extra) => {
     const r = await fetch('/api/plazo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo, datos, respuestas: { ...respuestas, ...extra } }) });
