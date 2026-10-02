@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ficha de documento para el despacho",
+  "type": "object",
+  "required": [
+    "tipo_documento",
+    "organismo",
+    "procedimiento",
+    "fecha_notificacion",
+    "motivo_fecha",
+    "plazo",
+    "resumen",
+    "que_hacer",
+    "pregunta_para_luis",
+    "mensaje_cliente",
+    "avisos",
+    "jurisdiccion",
+    "fecha_puesta_disposicion",
+    "fecha_limite_en_documento",
+    "municipio_organo",
+    "canal"
+  ],
+  "properties": {
+    "tipo_documento": {
+      "type": "string",
+      "description": "Qué es, en lenguaje de despacho. Ej.: Decreto de señalamiento de vista."
+    },
+    "organismo": {
+      "type": "string"
+    },
+    "procedimiento": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Tipo y número. Solo para Luis, nunca en el mensaje al cliente."
+    },
+    "fecha_notificacion": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "description": "Fecha de acceso en LexNET o la DEHú. Null si es papel: la IA no la inventa y la ficha pregunta a Luis qué día la recibió el cliente."
+    },
+    "motivo_fecha": {
+      "type": "string",
+      "description": "Qué fecha del documento se ha tomado como notificación y por qué. El vencimiento NO lo pone la IA."
+    },
+    "plazo": {
+      "type": "object",
+      "required": [
+        "dias",
+        "unidad",
+        "para_quien"
+      ],
+      "properties": {
+        "dias": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "unidad": {
+          "enum": [
+            "hábiles",
+            "naturales",
+            "meses",
+            "sin plazo propio"
+          ]
+        },
+        "para_quien": {
+          "enum": [
+            "cliente",
+            "otra_parte",
+            "desconocido"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "resumen": {
+      "type": "string",
+      "description": "Una o dos frases claras para Luis."
+    },
+    "que_hacer": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3
+    },
+    "pregunta_para_luis": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Si falta un dato para decidir (p. ej., qué parte es el cliente), se pregunta en vez de suponer."
+    },
+    "mensaje_cliente": {
+      "type": "string",
+      "description": "WhatsApp en lenguaje llano, sin importes, DNI, números de procedimiento ni NIG. Máx. 3 frases."
+    },
+    "avisos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Trampas detectadas: festivos, fecha de acceso, plazo de la otra parte, etc."
+    },
+    "jurisdiccion": {
+      "enum": [
+        "judicial",
+        "tributaria",
+        "seguridad_social",
+        "otra"
+      ]
+    },
+    "fecha_puesta_disposicion": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "fecha_limite_en_documento": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "description": "Si el documento trae la fecha, se usa esa y el código no calcula."
+    },
+    "municipio_organo": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Para cargar los festivos locales."
+    },
+    "canal": {
+      "enum": [
+        "lexnet",
+        "dehu",
+        "sede_electronica",
+        "papel",
+        "desconocido"
+      ],
+      "description": "Por dónde llegó. Si es papel (foto de carta), la fecha de notificación no está en el documento."
+    }
+  },
+  "description": "Lo que devuelve la IA. El código añade después vence, gracia, origen_fecha y la línea de días saltados según reglas-plazos.md; la ficha final es la de fichas-referencia.json.",
+  "additionalProperties": false
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ficha de documento para el despacho",
+  "type": "object",
+  "required": ["tipo_documento","organismo","fecha_notificacion","plazo","vence","origen_fecha","resumen","que_hacer","mensaje_cliente","pregunta_para_luis","avisos"],
+  "properties": {
+    "tipo_documento": {"type":"string","description":"Qué es, en lenguaje de despacho. Ej.: Decreto de señalamiento de vista."},
+    "organismo": {"type":"string"},
+    "procedimiento": {"type":["string","null"],"description":"Tipo y número. Solo para Luis, nunca en el mensaje al cliente."},
+    "fecha_notificacion": {"type":"string","format":"date"},
+    "cuenta_desde": {"type":["string","null"],"format":"date"},
+    "motivo_fecha": {"type":"string","description":"Por qué se cuenta desde esa fecha (acceso DEHú/LexNET, día siguiente, fecha fija)."},
+    "plazo": {"type":"object","required":["tipo","para_quien"],"properties":{
+      "dias":{"type":["integer","null"]},
+      "tipo":{"enum":["hábiles judiciales","hábiles administrativos","fecha fija","sin plazo propio"]},
+      "para_quien":{"enum":["cliente","otra_parte","otra_parte_si_cliente_demandado","desconocido"]}}},
+    "vence": {"type":["string","null"],"format":"date","description":"PROPUESTA. Luis la confirma siempre."},
+    "gracia": {"type":["string","null"],"description":"Solo judicial: hasta las 15:00 del día hábil siguiente."},
+    "origen_fecha": {"enum":["calculada","en_documento"]},
+    "resumen": {"type":"string","description":"Una o dos frases claras para Luis."},
+    "que_hacer": {"type":"array","items":{"type":"string"},"maxItems":3},
+    "pregunta_para_luis": {"type":["string","null"],"description":"Si falta un dato para decidir (p. ej., qué parte es el cliente), se pregunta en vez de suponer."},
+    "mensaje_cliente": {"type":"string","description":"WhatsApp en lenguaje llano, sin importes, DNI, números de procedimiento ni NIG. Máx. 3 frases."},
+    "avisos": {"type":"array","items":{"type":"string"},"description":"Trampas detectadas: festivos, fecha de acceso, plazo de la otra parte, etc."}
+  }
+}

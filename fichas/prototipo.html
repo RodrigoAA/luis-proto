@@ -1,0 +1,63 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Despacho · fichas</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;background:#efeae2;color:#111}
+header{background:#075e54;color:#fff;padding:12px 14px;position:sticky;top:0;z-index:2}
+header b{display:block;font-size:16px}header span{font-size:12px;opacity:.8}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 10px;background:#f7f5f2;border-bottom:1px solid #ddd}
+.tabs button{flex:none;border:1px solid #cfd8d6;background:#fff;border-radius:16px;padding:6px 10px;font-size:12px}
+.tabs button.on{background:#075e54;color:#fff;border-color:#075e54}
+main{padding:12px 10px 40px;max-width:480px;margin:0 auto}
+.b{max-width:88%;padding:8px 10px;border-radius:8px;margin:6px 0;font-size:14px;line-height:1.4;box-shadow:0 1px .5px rgba(0,0,0,.13)}
+.out{background:#d9fdd3;margin-left:auto}.in{background:#fff}
+.file{display:flex;gap:8px;align-items:center}.file i{font-style:normal;background:#e53935;color:#fff;font-size:10px;font-weight:700;padding:6px 4px;border-radius:3px}
+.card{background:#fff;border-radius:10px;padding:12px;margin:6px 0;box-shadow:0 1px .5px rgba(0,0,0,.13);font-size:14px;line-height:1.4}
+.kind{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#667}
+.card h3{margin:2px 0 2px;font-size:16px}.org{color:#555;font-size:13px}
+.deadline{margin:10px 0;padding:10px;border-radius:8px;background:#fdecea;border:1px solid #f5c2bd}
+.deadline .d{font-size:20px;font-weight:700;color:#c62828}.deadline small{display:block;color:#6b2a24}
+.deadline.none{background:#eef6f0;border-color:#cfe5d5}.deadline.none .d{color:#2e7d32}
+.deadline .tag{display:inline-block;font-size:11px;background:#c62828;color:#fff;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.sec{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#667;margin:10px 0 4px}
+ul{margin:0;padding-left:18px}.warn{background:#fff8e1;border-left:3px solid #f9a825;padding:6px 8px;margin-top:8px;font-size:13px}
+.ask{background:#e3f2fd;border-left:3px solid #1976d2;padding:8px;margin-top:10px;font-size:13px}
+.ask .opts{display:flex;gap:6px;margin-top:6px}.ask button{border:1px solid #1976d2;background:#fff;color:#1976d2;border-radius:14px;padding:4px 10px;font-size:12px}
+.msg{background:#f0f2f5;border-radius:8px;padding:8px 10px;font-size:14px}
+.actions{display:flex;gap:8px;margin-top:10px}.actions button{flex:1;padding:10px;border-radius:8px;font-size:14px;font-weight:600;border:0}
+.send{background:#25d366;color:#073b1e}.fix{background:#eef0f2;color:#222}
+.client{margin-top:14px;border-top:1px dashed #b9b2a6;padding-top:10px}.client .lbl{font-size:12px;color:#666;text-align:center;margin-bottom:4px}
+.note{font-size:11px;color:#777;text-align:center;margin-top:16px}
+</style></head><body>
+<header><b>Despacho · asistente</b><span>Reenvía aquí lo que te llegue y te preparo la ficha</span></header>
+<div class="tabs" id="tabs"></div><main id="m"></main>
+<script>
+const D=[
+ {"doc":"01-diligencia-ordenacion","tipo_documento":"Diligencia de ordenación","organismo":"Juzgado de Primera Instancia n.º 3 de Cáceres","procedimiento":"Juicio verbal 418/2026","fecha_notificacion":"2026-10-01","cuenta_desde":"2026-10-02","motivo_fecha":"Se cuenta desde el día siguiente a la notificación.","plazo":{"dias":3,"tipo":"hábiles judiciales","para_quien":"otra_parte_si_cliente_demandado"},"vence":"2026-10-06","gracia":"2026-10-07 15:00","origen_fecha":"calculada","resumen":"El juzgado da la demanda por contestada. La parte demandante tiene 3 días para pedir que haya vista.","que_hacer":["Si tu cliente es el demandado: nada, esperar.","Si es el demandante: decidir si pedís vista antes del 6 de octubre."],"pregunta_para_luis":"¿Tu cliente es el demandante o el demandado?","mensaje_cliente":"Hola, te escribo del despacho. El juzgado ha dado por contestada la demanda. Por ahora no tienes que hacer nada; te aviso en cuanto haya novedades.","avisos":["El plazo puede no ser de tu cliente: confírmalo antes de enviar."]},
+ {"doc":"02-decreto-senalamiento-vista","tipo_documento":"Decreto de señalamiento de vista","organismo":"Juzgado de Primera Instancia n.º 1 de Plasencia","procedimiento":"Juicio verbal 233/2026","fecha_notificacion":"2026-10-02","cuenta_desde":"2026-10-05","motivo_fecha":"Día hábil siguiente a la notificación.","plazo":{"dias":5,"tipo":"hábiles judiciales","para_quien":"cliente"},"vence":"2026-10-09","gracia":"2026-10-13 15:00","origen_fecha":"calculada","resumen":"El juzgado fija la vista para el 12 de marzo de 2027 a las 10:30. Hay 5 días para pedir que cite a testigos o peritos.","que_hacer":["Apuntar la vista: 12/03/2027, 10:30.","Decidir antes del 9 de octubre si hace falta que el juzgado cite a alguien."],"pregunta_para_luis":null,"mensaje_cliente":"Hola, te escribo del despacho. Ya hay fecha para el juicio: el 12 de marzo de 2027 a las 10:30. Te llamaré antes para prepararlo juntos.","avisos":["El 12 de octubre es festivo: el día de gracia pasa al 13."]},
+ {"doc":"03-sentencia","tipo_documento":"Sentencia (estimación parcial)","organismo":"Juzgado de Primera Instancia n.º 2 de Cáceres","procedimiento":"Juicio verbal 301/2026","fecha_notificacion":"2026-09-30","cuenta_desde":"2026-10-01","motivo_fecha":"Día siguiente a la notificación.","plazo":{"dias":20,"tipo":"hábiles judiciales","para_quien":"cliente"},"vence":"2026-10-29","gracia":"2026-10-30 15:00","origen_fecha":"calculada","resumen":"La sentencia da la razón en parte y reconoce 4.850 €. Hay 20 días para recurrir en apelación.","que_hacer":["Hablar con la clienta para decidir si recurre.","Si no recurre: esperar el pago o pedir la ejecución."],"pregunta_para_luis":null,"mensaje_cliente":"Hola, te escribo del despacho. Ha salido la sentencia y nos dan la razón en parte. ¿Te viene bien que te llame esta semana para contártela y decidir los siguientes pasos?","avisos":["El plazo cruza el 12 de octubre, festivo."]},
+ {"doc":"04-requerimiento-aeat","tipo_documento":"Requerimiento de documentación (IRPF 2024)","organismo":"Agencia Tributaria, Delegación de Cáceres","procedimiento":"Comprobación IRPF 2024","fecha_notificacion":"2026-10-01","cuenta_desde":"2026-10-02","motivo_fecha":"Cuenta desde que se abrió en la DEHú (1/10), no desde que se puso a disposición (29/09).","plazo":{"dias":10,"tipo":"hábiles administrativos","para_quien":"cliente"},"vence":"2026-10-16","gracia":null,"origen_fecha":"calculada","resumen":"Hacienda pide justificar los gastos del alquiler declarados en la renta de 2024.","que_hacer":["Reunir el contrato de alquiler, las facturas de reparación (3.420 €) e intereses (1.180 €) y el IBI.","Aportarlos por la sede electrónica antes del 16 de octubre."],"pregunta_para_luis":null,"mensaje_cliente":"Hola, te escribo del despacho. Hacienda nos pide unos papeles de tu renta de 2024. Necesito que me mandes el contrato del piso alquilado, las facturas de la reparación y de los intereses, y el recibo del IBI antes del 13 de octubre, para tener margen.","avisos":["En plazos administrativos no hay día de gracia."]},
+ {"doc":"05-reclamacion-deuda-tgss","tipo_documento":"Reclamación de deuda (autónomos)","organismo":"Tesorería General de la Seguridad Social, Cáceres","procedimiento":"Reclamación de deuda RETA","fecha_notificacion":"2026-10-01","cuenta_desde":null,"motivo_fecha":"La fecha límite viene en el propio documento; no se calcula.","plazo":{"dias":null,"tipo":"fecha fija","para_quien":"cliente"},"vence":"2026-11-30","gracia":null,"origen_fecha":"en_documento","resumen":"La Seguridad Social reclama 646,80 € de cuotas de autónomos.","que_hacer":["Pagar antes del 30 de noviembre.","Si no está de acuerdo: recurso de alzada en el plazo de un mes."],"pregunta_para_luis":null,"mensaje_cliente":"Hola, te escribo del despacho. Te ha llegado una reclamación de la Seguridad Social sobre tus cuotas de autónoma. Hay margen hasta el 30 de noviembre. ¿Te llamo y lo vemos?","avisos":["La fecha viene en el documento: no la recalcules."]},
+ {"doc":"06-email-procurador","tipo_documento":"Email del procurador (reenvía la diligencia de ordenación)","organismo":"Procurador · Juzgado de Primera Instancia n.º 3 de Cáceres","procedimiento":"Juicio verbal 418/2026","fecha_notificacion":"2026-10-01","cuenta_desde":null,"motivo_fecha":"El cliente es el demandado: el plazo es de la otra parte.","plazo":{"dias":null,"tipo":"sin plazo propio","para_quien":"otra_parte"},"vence":null,"gracia":null,"origen_fecha":"calculada","resumen":"El procurador reenvía la diligencia: la demanda se da por contestada. El plazo de 3 días es de la parte demandante.","que_hacer":["Nada urgente.","Valorar con el procurador si interesa pedir vista."],"pregunta_para_luis":null,"mensaje_cliente":"Hola, te escribo del despacho. El juzgado ha dado por contestada la demanda. Por ahora no tienes que hacer nada; te aviso en cuanto haya novedades.","avisos":[]}
+]
+;
+const fmt=s=>{if(!s)return"";const[y,m,d]=s.slice(0,10).split("-");const M=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];return `${+d} ${M[m-1]} ${y}`+(s.length>10?` · ${s.slice(11)} h`:"")};
+const names=["Diligencia","Señalamiento","Sentencia","Hacienda","Seg. Social","Email procurador"];
+const tabs=document.getElementById("tabs"),m=document.getElementById("m");
+D.forEach((f,i)=>{const b=document.createElement("button");b.textContent=names[i];b.onclick=()=>show(i);tabs.appendChild(b)});
+function show(i){[...tabs.children].forEach((b,j)=>b.classList.toggle("on",i==j));const f=D[i];
+const who=f.plazo.para_quien;const own=who==="cliente";
+let dl;
+if(!f.vence||who==="otra_parte"){dl=`<div class="deadline none"><div class="d">Sin plazo para tu cliente</div><small>${f.motivo_fecha}</small></div>`}
+else{dl=`<div class="deadline"><div class="d">${fmt(f.vence)}<span class="tag">Propuesto · confírmalo</span></div><small>${f.plazo.dias?f.plazo.dias+" días "+f.plazo.tipo:"Fecha fija del documento"}${f.gracia?" · gracia hasta "+fmt(f.gracia):""}</small><small>${f.motivo_fecha}</small></div>`}
+m.innerHTML=`<div class="b out"><div class="file"><i>PDF</i><div>${f.doc}.pdf<br><small style="color:#667">Reenviado</small></div></div></div>
+<div class="card"><div class="kind">${f.origen_fecha==="en_documento"?"Fecha leída del documento":"Ficha"}</div><h3>${f.tipo_documento}</h3><div class="org">${f.organismo}${f.procedimiento?" · "+f.procedimiento:""}</div>
+${dl}<div>${f.resumen}</div><div class="sec">Qué hay que hacer</div><ul>${f.que_hacer.map(x=>`<li>${x}</li>`).join("")}</ul>
+${f.avisos.map(a=>`<div class="warn">⚠︎ ${a}</div>`).join("")}
+${f.pregunta_para_luis?`<div class="ask"><b>Antes de seguir:</b> ${f.pregunta_para_luis}<div class="opts"><button>Demandante</button><button>Demandado</button></div></div>`:""}
+<div class="sec">Mensaje para el cliente</div><div class="msg">${f.mensaje_cliente}</div>
+<div class="actions"><button class="fix">Corregir</button><button class="send" id="s">Enviar al cliente</button></div></div>
+<div id="c"></div><p class="note">Prototipo con documentos ficticios. Las fechas son propuestas: siempre las confirma el despacho.</p>`;
+document.getElementById("s").onclick=()=>{document.getElementById("c").innerHTML=`<div class="client"><div class="lbl">Así lo ve el cliente</div><div class="b in">${f.mensaje_cliente}</div></div>`;window.scrollTo(0,document.body.scrollHeight)};
+}
+show(0);
+</script></body></html>
