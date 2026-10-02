@@ -2,9 +2,11 @@
 // Uso: OPENAI_API_KEY=... node scripts/eval.mjs   (opcional: --cache para reutilizar la última respuesta de la IA)
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { extraerDatos, MODEL } from '../lib/ia.js';
-import { construirFicha, datosSensibles } from '../lib/ficha.js';
+import { construirFicha, datosSensibles, jergaEn } from '../lib/ficha.js';
 
 const REF = JSON.parse(readFileSync(new URL('../fichas/fichas-referencia.json', import.meta.url)));
+// Cuerpo del mensaje sin saludo ni firma.
+const cuerpo = (m = '') => m.split('\n').slice(1, -3).join(' ');
 const usarCache = process.argv.includes('--cache');
 const CACHE = new URL('../.eval-cache/', import.meta.url);
 if (!existsSync(CACHE)) mkdirSync(CACHE);
@@ -41,6 +43,11 @@ for (const ref of REF) {
     para_quien: f.plazo.para_quien === quienEsperado,
     msg_limpio_ia: sens.length === 0,
     msg_final_limpio: datosSensibles(f.mensaje_cliente).length === 0,
+    // Mensaje al cliente tal como lo verá Luis (salida final, no la de la IA).
+    msg_fecha: !(fCalc.estado_plazo === 'calculada' || fCalc.estado_plazo === 'en_documento') || /antes del? \d{1,2} de [a-z]+/.test(fCalc.mensaje_cliente),
+    msg_sin_jerga: [f, fCalc, construirFicha(datos, { cliente_es: 'demandado' })].every((x) => jergaEn(cuerpo(x.mensaje_cliente)).length === 0),
+    saludo_pila: (!datos.nombre_pila || datos.nombre_pila.trim().split(/\s+/).length <= 2) && (!['tributaria', 'seguridad_social'].includes(datos.jurisdiccion) || /^Estimad[oa] /.test(f.mensaje_cliente)),
+    msg_cambia: !esDiligencia || (construirFicha(datos, { cliente_es: 'demandante' }).mensaje_cliente !== construirFicha(datos, { cliente_es: 'demandado' }).mensaje_cliente && construirFicha(datos, { para_quien: 'cliente' }).mensaje_cliente !== construirFicha(datos, { para_quien: 'otra_parte' }).mensaje_cliente),
   };
   filas.push(fila);
   const detalle = { doc: ref.doc, ia: { tipo: datos.tipo_documento, organismo: datos.organismo, fecha_notificacion: datos.fecha_notificacion, plazo: datos.plazo, fecha_limite_en_documento: datos.fecha_limite_en_documento, canal: datos.canal }, ficha: { estado: f.estado_plazo, vence: fCalc.vence, gracia: fCalc.gracia, linea: fCalc.linea_plazo, pregunta: f.pregunta?.texto, mensaje: f.mensaje_cliente, que_hacer: f.que_hacer, avisos: f.avisos } };

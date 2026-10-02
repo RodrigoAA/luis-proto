@@ -62,3 +62,19 @@ test('detecta jerga sin falsos positivos en el saludo', () => {
   assert.deepEqual(jergaEn('El juzgado ha dado traslado y estima la demanda'), ['traslado', 'estima']);
   assert.deepEqual(jergaEn('Estimado Javier: el juicio será el día 12.'), []);
 });
+
+test('la jerga que se cuela se traduce en el mensaje final (salida real de la IA)', async () => {
+  const { construirFicha, jergaEn } = await import('../lib/ficha.js');
+  const base = { tratamiento: null, nombre_pila: null, plazo: { dias: 5, unidad: 'hábiles', para_quien: 'cliente', parte_con_plazo: 'ambas' }, jurisdiccion: 'judicial', canal: 'lexnet', fecha_notificacion: '2026-10-01', municipio_organo: 'Cáceres' };
+  for (const m of ['Ha llegado un decreto del juzgado que señala la vista para el 12 de marzo de 2027 a las 10:30. Debe indicarnos antes de {FECHA_LIMITE} los testigos para la vista.', 'Ha llegado la sentencia del juzgado que estima parcialmente la demanda. Si quiere reclamar, antes de {FECHA_LIMITE}.']) {
+    const f = construirFicha({ ...base, mensaje_cliente: m, mensaje_sin_plazo: m.replace(/ Debe.*| Si quiere.*/, '') });
+    assert.deepEqual(jergaEn(f.mensaje_cliente), [], f.mensaje_cliente);
+  }
+});
+
+test('Luis puede responder también con para_quien', async () => {
+  const { construirFicha } = await import('../lib/ficha.js');
+  const d = { tratamiento: null, nombre_pila: null, plazo: { dias: 5, unidad: 'hábiles', para_quien: 'desconocido', parte_con_plazo: 'demandante' }, cliente_es: 'no_consta', jurisdiccion: 'judicial', canal: 'lexnet', fecha_notificacion: '2026-09-29', municipio_organo: 'Cáceres', mensaje_cliente: 'Tiene que aportar un documento antes de {FECHA_LIMITE}.', mensaje_sin_plazo: 'Por ahora no tiene que hacer nada.' };
+  assert.match(construirFicha(d, { para_quien: 'cliente' }).mensaje_cliente, /antes del? \d/);
+  assert.match(construirFicha(d, { para_quien: 'otra_parte' }).mensaje_cliente, /no tiene que hacer nada/);
+});
