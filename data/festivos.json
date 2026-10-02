@@ -1,0 +1,81 @@
+{
+  "_nota": "Festivos que usa lib/plazos.js. Hay que actualizarlo cada año con los calendarios oficiales: BOE (nacionales), DOE (Extremadura y fiestas locales) y ayuntamientos. 'estado' = 'verificado' si está comprobado en la fuente oficial enlazada; 'pendiente de verificar' si no. Los festivos que caen en domingo y se trasladan aparecen en el día en que se disfrutan.",
+  "2026": {
+    "comunes": {
+      "estado": "verificado",
+      "fuentes": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-21667",
+        "https://doe.juntaex.es/pdfs/doe/2025/940o/25040070.pdf"
+      ],
+      "dias": [
+        {"fecha": "2026-01-01", "nombre": "Año Nuevo"},
+        {"fecha": "2026-01-06", "nombre": "Epifanía del Señor"},
+        {"fecha": "2026-04-02", "nombre": "Jueves Santo"},
+        {"fecha": "2026-04-03", "nombre": "Viernes Santo"},
+        {"fecha": "2026-05-01", "nombre": "Fiesta del Trabajo"},
+        {"fecha": "2026-08-15", "nombre": "Asunción de la Virgen"},
+        {"fecha": "2026-09-08", "nombre": "Día de Extremadura"},
+        {"fecha": "2026-10-12", "nombre": "Fiesta Nacional de España"},
+        {"fecha": "2026-11-02", "nombre": "Todos los Santos (trasladado del domingo 1)"},
+        {"fecha": "2026-12-07", "nombre": "Día de la Constitución (trasladado del domingo 6)"},
+        {"fecha": "2026-12-08", "nombre": "Inmaculada Concepción"},
+        {"fecha": "2026-12-25", "nombre": "Navidad"}
+      ]
+    },
+    "locales": {
+      "caceres": {
+        "estado": "verificado",
+        "fuente": "https://doe.juntaex.es/pdfs/doe/2025/2040o/25063799.pdf",
+        "dias": [
+          {"fecha": "2026-04-23", "nombre": "San Jorge (local Cáceres)"},
+          {"fecha": "2026-05-29", "nombre": "Ferias de San Fernando (local Cáceres)"}
+        ]
+      },
+      "plasencia": {
+        "estado": "verificado",
+        "fuente": "https://doe.juntaex.es/pdfs/doe/2025/2040o/25063799.pdf",
+        "dias": [
+          {"fecha": "2026-06-11", "nombre": "Fiesta local Plasencia"},
+          {"fecha": "2026-06-12", "nombre": "Fiesta local Plasencia"}
+        ]
+      }
+    }
+  },
+  "2027": {
+    "comunes": {
+      "estado": "verificado (Decreto autonómico 119/2026). La resolución del BOE con los nacionales de 2027 aún no estaba publicada a 3/10/2026: revisarla cuando salga.",
+      "fuentes": [
+        "https://doe.juntaex.es/pdfs/doe/2026/1080o/26040142.pdf"
+      ],
+      "dias": [
+        {"fecha": "2027-01-01", "nombre": "Año Nuevo"},
+        {"fecha": "2027-01-06", "nombre": "Epifanía del Señor"},
+        {"fecha": "2027-03-25", "nombre": "Jueves Santo"},
+        {"fecha": "2027-03-26", "nombre": "Viernes Santo"},
+        {"fecha": "2027-05-01", "nombre": "Fiesta del Trabajo"},
+        {"fecha": "2027-09-08", "nombre": "Día de Extremadura"},
+        {"fecha": "2027-10-11", "nombre": "Asunción (trasladada del domingo 15 de agosto)"},
+        {"fecha": "2027-10-12", "nombre": "Fiesta Nacional de España"},
+        {"fecha": "2027-11-01", "nombre": "Todos los Santos"},
+        {"fecha": "2027-12-06", "nombre": "Día de la Constitución"},
+        {"fecha": "2027-12-08", "nombre": "Inmaculada Concepción"},
+        {"fecha": "2027-12-25", "nombre": "Navidad"}
+      ]
+    },
+    "locales": {
+      "caceres": {
+        "estado": "pendiente de verificar: aprobadas por el Pleno del Ayuntamiento (16/07/2026), falta la resolución en el DOE",
+        "fuente": "https://www.radiointerior.es/texto-diario/mostrar/5956150/estas-seran-fiestas-locales-caceres-proximo-ano",
+        "dias": [
+          {"fecha": "2027-04-23", "nombre": "San Jorge (local Cáceres)"},
+          {"fecha": "2027-05-28", "nombre": "Ferias de San Fernando (local Cáceres)"}
+        ]
+      },
+      "plasencia": {
+        "estado": "pendiente de verificar: no encontradas; se publicarán en el DOE (normalmente en octubre)",
+        "fuente": null,
+        "dias": []
+      }
+    }
+  }
+}

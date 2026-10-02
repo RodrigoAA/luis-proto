@@ -1,0 +1,10 @@
+{
+  "name": "luis-proto",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "22.x" },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "eval": "node scripts/eval.mjs"
+  }
+}

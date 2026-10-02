@@ -1,0 +1,184 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Despacho · asistente</title>
+<meta name="theme-color" content="#075e54">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;background:#efeae2;color:#111}
+header{background:#075e54;color:#fff;padding:12px 14px;position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:8px}
+header b{display:block;font-size:16px}header span{font-size:12px;opacity:.8}header a{color:#fff;font-size:12px;opacity:.85}
+main{padding:12px 10px 150px;max-width:480px;margin:0 auto}
+.b{max-width:88%;padding:8px 10px;border-radius:8px;margin:6px 0;font-size:14px;line-height:1.4;box-shadow:0 1px .5px rgba(0,0,0,.13)}
+.out{background:#d9fdd3;margin-left:auto}.in{background:#fff}
+.file{display:flex;gap:8px;align-items:center}.file i{font-style:normal;background:#e53935;color:#fff;font-size:10px;font-weight:700;padding:6px 4px;border-radius:3px}.file i.img{background:#1976d2}
+.card{background:#fff;border-radius:10px;padding:12px;margin:6px 0;box-shadow:0 1px .5px rgba(0,0,0,.13);font-size:14px;line-height:1.4}
+.kind{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#667}
+.card h3{margin:2px 0 2px;font-size:16px}.org{color:#555;font-size:13px}
+.deadline{margin:10px 0;padding:10px;border-radius:8px;background:#fdecea;border:1px solid #f5c2bd}
+.deadline .d{font-size:20px;font-weight:700;color:#c62828}.deadline small{display:block;color:#6b2a24;margin-top:3px}
+.deadline.none{background:#eef6f0;border-color:#cfe5d5}.deadline.none .d{color:#2e7d32}.deadline.none small{color:#2e5a35}
+.deadline.wait{background:#fff8e1;border-color:#f3d98b}.deadline.wait .d{color:#8a5a00;font-size:16px}.deadline.wait small{color:#6d5200}
+.deadline .tag{display:inline-block;font-size:11px;background:#c62828;color:#fff;border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.sec{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#667;margin:10px 0 4px}
+ul{margin:0;padding-left:18px}.warn{background:#fff8e1;border-left:3px solid #f9a825;padding:6px 8px;margin-top:8px;font-size:13px}
+.ask{background:#e3f2fd;border-left:3px solid #1976d2;padding:8px;margin-top:10px;font-size:13px}
+.ask .opts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}.ask button{border:1px solid #1976d2;background:#fff;color:#1976d2;border-radius:14px;padding:6px 12px;font-size:13px}
+.ask input{padding:5px;border:1px solid #9bbbe0;border-radius:6px;font-size:14px}
+textarea.msg{width:100%;min-height:96px;background:#f0f2f5;border:1px solid transparent;border-radius:8px;padding:8px 10px;font:inherit;font-size:14px;resize:vertical}
+textarea.msg:focus{outline:none;border-color:#25d366;background:#fff}
+.actions{display:flex;gap:8px;margin-top:10px}.actions button,.actions a{flex:1;padding:10px;border-radius:8px;font-size:14px;font-weight:600;border:0;text-align:center;text-decoration:none}
+.send{background:#25d366;color:#073b1e}.fix{background:#eef0f2;color:#222}.wa{background:#e7f8ee;color:#075e54}
+.note{font-size:11px;color:#777;text-align:center;margin-top:16px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#f7f5f2;border-top:1px solid #ddd;padding:10px;z-index:3}
+.bar .in2{max-width:480px;margin:0 auto}
+.bar .row{display:flex;gap:8px}.bar label{flex:1;text-align:center;background:#075e54;color:#fff;border-radius:22px;padding:11px 8px;font-size:14px;font-weight:600;cursor:pointer}
+.bar label.alt{background:#fff;color:#075e54;border:1px solid #075e54}.bar input[type=file]{display:none}
+.bar .warn2{font-size:11px;color:#8a5a00;text-align:center;margin-top:6px}
+.dots::after{content:"…";animation:d 1.2s infinite}@keyframes d{0%{content:"."}33%{content:".."}66%{content:"..."}}
+.err{background:#fdecea;color:#7b1f1a}
+#login{max-width:380px;margin:40px auto;background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+#login input{width:100%;padding:10px;font-size:16px;border:1px solid #ccc;border-radius:8px;margin:10px 0}
+#login button{width:100%;padding:11px;background:#075e54;color:#fff;border:0;border-radius:8px;font-size:15px;font-weight:600}
+.ej a{display:block;color:#075e54;margin:3px 0}
+.toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:#222;color:#fff;padding:8px 14px;border-radius:16px;font-size:13px;opacity:0;transition:opacity .2s;z-index:5}.toast.on{opacity:.92}
+</style></head><body>
+<header><div><b>Despacho · asistente</b><span>Sube lo que te llegue y te preparo la ficha</span></div><a href="#" id="salir" hidden>Salir</a></header>
+
+<div id="login" hidden>
+  <b>Código de acceso</b>
+  <p style="font-size:13px;color:#555;margin:6px 0 0">Te lo ha pasado Rodrigo. Solo hay que ponerlo una vez en este móvil.</p>
+  <input id="code" autocomplete="off" autocapitalize="none" placeholder="p. ej. palabra1234">
+  <button id="entrar">Entrar</button>
+  <p id="loginErr" style="color:#c62828;font-size:13px" hidden>Ese código no es correcto.</p>
+</div>
+
+<main id="m" hidden>
+  <div class="b in">Hola, Luis. Mándame un PDF de LexNET, de la DEHú o de la Seguridad Social, o hazle una foto a una carta, y te preparo la ficha con el plazo y el mensaje para el cliente. Tú lo revisas antes de mandar nada.</div>
+  <div class="b in ej"><b>¿Sin documentos a mano?</b> Descarga uno de ejemplo (son inventados) y súbelo:
+    <a href="/ejemplos/01-diligencia-ordenacion.pdf" download>1 · Diligencia de ordenación</a>
+    <a href="/ejemplos/02-decreto-senalamiento-vista.pdf" download>2 · Decreto de señalamiento de vista</a>
+    <a href="/ejemplos/03-sentencia.pdf" download>3 · Sentencia</a>
+    <a href="/ejemplos/04-requerimiento-aeat.pdf" download>4 · Requerimiento de Hacienda</a>
+    <a href="/ejemplos/05-reclamacion-deuda-tgss.pdf" download>5 · Reclamación de la Seguridad Social</a>
+    <a href="/ejemplos/06-email-procurador.pdf" download>6 · Email del procurador</a>
+  </div>
+  <div id="chat"></div>
+  <p class="note">Prototipo. Las fechas son propuestas: siempre las confirma el despacho. <a href="/maqueta">Ver la maqueta original</a></p>
+</main>
+
+<div class="bar" id="bar" hidden><div class="in2">
+  <div class="row">
+    <label>📄 Subir PDF<input type="file" id="fPdf" accept="application/pdf"></label>
+    <label class="alt">📷 Foto de carta<input type="file" id="fFoto" accept="image/*" capture="environment"></label>
+  </div>
+  <div class="warn2">Prototipo: no subas documentos reales sin tapar nombres, DNI, nº de procedimiento y NIG.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const M = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], DS = ['dom','lun','mar','mié','jue','vie','sáb'];
+const fmt = (s) => { if (!s) return ''; const [y, m, d] = s.slice(0, 10).split('-').map(Number); const w = new Date(Date.UTC(y, m - 1, d)).getUTCDay(); return `${DS[w]} ${d} ${M[m - 1]} ${y}` + (s.length > 10 ? ` · ${s.slice(11)} h` : ''); };
+const toast = (t) => { const e = $('toast'); e.textContent = t; e.classList.add('on'); setTimeout(() => e.classList.remove('on'), 1800); };
+let codigo = localStorage.getItem('luis_codigo');
+
+function pantalla() {
+  const dentro = !!codigo;
+  $('login').hidden = dentro; $('m').hidden = !dentro; $('bar').hidden = !dentro; $('salir').hidden = !dentro;
+}
+$('entrar').onclick = async () => {
+  const c = $('code').value.trim(); if (!c) return;
+  // Comprobamos el código con una llamada barata (no usa la IA).
+  const r = await fetch('/api/plazo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: c }) });
+  if (r.status === 401) { $('loginErr').hidden = false; return; }
+  codigo = c; localStorage.setItem('luis_codigo', c); pantalla();
+};
+$('code').onkeydown = (e) => { if (e.key === 'Enter') $('entrar').click(); };
+$('salir').onclick = (e) => { e.preventDefault(); localStorage.removeItem('luis_codigo'); codigo = null; pantalla(); };
+pantalla();
+
+function burbuja(html, cls = 'in') { const d = document.createElement('div'); d.className = 'b ' + cls; d.innerHTML = html; $('chat').appendChild(d); d.scrollIntoView({ behavior: 'smooth', block: 'end' }); return d; }
+
+async function leerArchivo(file) {
+  if (file.type === 'application/pdf') {
+    if (file.size > 3 * 1024 * 1024) throw new Error('El PDF pesa más de 3 MB. Prueba a reenviar solo la notificación.');
+    return { tipo: 'application/pdf', base64: await aBase64(file) };
+  }
+  // Fotos: las reducimos en el móvil para que suban rápido y quepan.
+  const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ko(new Error('No puedo abrir esa imagen. Prueba con JPG o PNG.')); i.src = URL.createObjectURL(file); });
+  const max = 2000, k = Math.min(1, max / Math.max(img.width, img.height));
+  const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return { tipo: 'image/jpeg', base64: c.toDataURL('image/jpeg', 0.85).split(',')[1] };
+}
+const aBase64 = (file) => new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = ko; r.readAsDataURL(file); });
+
+async function enviar(file) {
+  const esPdf = file.type === 'application/pdf';
+  burbuja(`<div class="file"><i class="${esPdf ? '' : 'img'}">${esPdf ? 'PDF' : 'FOTO'}</i><div>${esc(file.name || 'foto.jpg')}<br><small style="color:#667">Enviado</small></div></div>`, 'out');
+  const espera = burbuja('<span class="dots">Leyendo el documento</span>');
+  try {
+    const { tipo, base64 } = await leerArchivo(file);
+    const r = await fetch('/api/ficha', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo, archivo: base64, tipo, nombre: file.name }) });
+    const j = await r.json().catch(() => ({ error: 'Respuesta rara del servidor.' }));
+    if (r.status === 401) { espera.remove(); localStorage.removeItem('luis_codigo'); codigo = null; pantalla(); return; }
+    if (!r.ok) throw new Error(j.error || 'Algo ha fallado.');
+    espera.remove();
+    pintarFicha(j.ficha, j.datos);
+  } catch (e) {
+    espera.classList.add('err'); espera.textContent = e.message;
+  }
+}
+$('fPdf').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) enviar(f); };
+$('fFoto').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) enviar(f); };
+
+function bloquePlazo(f) {
+  if (f.estado_plazo === 'calculada' || f.estado_plazo === 'en_documento') {
+    const det = f.estado_plazo === 'en_documento' ? 'Fecha que trae el propio documento' : `${f.plazo.dias} ${f.plazo.unidad === 'hábiles' ? 'días hábiles' : f.plazo.unidad}${f.plazo.descripcion ? ' · ' + esc(f.plazo.descripcion) : ''}`;
+    return `<div class="deadline"><div class="d">${fmt(f.vence)}<span class="tag">Propuesto · confírmalo</span></div><small><b>${det}</b>${f.gracia ? ' · gracia hasta ' + fmt(f.gracia) : ''}</small><small>${esc(f.linea_plazo)}</small></div>`;
+  }
+  if (f.estado_plazo === 'sin_plazo') return `<div class="deadline none"><div class="d">Sin plazo para tu cliente</div><small>${esc(f.linea_plazo)}</small></div>`;
+  return `<div class="deadline wait"><div class="d">Plazo pendiente: falta un dato</div><small>${esc(f.linea_plazo || '')}</small></div>`;
+}
+
+function bloquePregunta(f) {
+  const p = f.pregunta; if (!p) return '';
+  if (p.tipo === 'parte') return `<div class="ask"><b>Antes de seguir:</b> ${esc(p.texto)}<div class="opts"><button data-r="demandante">Demandante</button><button data-r="demandado">Demandado</button></div></div>`;
+  if (p.tipo === 'fecha') return `<div class="ask"><b>Antes de seguir:</b> ${esc(p.texto)}<div class="opts"><input type="date" data-f><button data-calc>Calcular plazo</button></div></div>`;
+  return `<div class="ask">${esc(p.texto)}</div>`;
+}
+
+function pintarFicha(f, datos, card, respuestas = {}, mensajeEditado = null) {
+  card = card || (() => { const d = document.createElement('div'); d.className = 'card'; $('chat').appendChild(d); return d; })();
+  const mensaje = mensajeEditado ?? f.mensaje_cliente;
+  card.innerHTML = `<div class="kind">${f.origen_fecha === 'en_documento' ? 'Fecha leída del documento' : 'Ficha'} · ${esc(f.canal || '')}</div><h3>${esc(f.tipo_documento)}</h3><div class="org">${esc(f.organismo)}${f.procedimiento ? ' · ' + esc(f.procedimiento) : ''}</div>
+  ${f.fecha_notificacion ? `<div class="org">Notificado: ${fmt(f.fecha_notificacion)}</div>` : ''}
+  ${bloquePlazo(f)}${bloquePregunta(f)}
+  <div style="margin-top:8px">${esc(f.resumen)}</div>
+  <div class="sec">Qué hay que hacer</div><ul>${(f.que_hacer || []).map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+  ${(f.avisos || []).map((a) => `<div class="warn">⚠︎ ${esc(a)}</div>`).join('')}
+  <div class="sec">Mensaje para el cliente (puedes editarlo)</div><textarea class="msg">${esc(mensaje)}</textarea>
+  <div class="actions"><button class="fix" data-fix>Corregir</button><button class="send" data-copy>Copiar mensaje</button></div>
+  <div class="actions"><a class="wa" data-wa target="_blank" rel="noopener">Abrir WhatsApp con el mensaje</a></div>`;
+  const ta = card.querySelector('textarea');
+  let editado = mensajeEditado !== null;
+  const wa = card.querySelector('[data-wa]');
+  const actWa = () => { wa.href = 'https://wa.me/?text=' + encodeURIComponent(ta.value); };
+  actWa();
+  ta.oninput = () => { editado = true; actWa(); };
+  card.querySelector('[data-fix]').onclick = () => { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); toast('Edita el mensaje y la fecha si hace falta'); };
+  card.querySelector('[data-copy]').onclick = async () => {
+    try { await navigator.clipboard.writeText(ta.value); } catch { ta.select(); document.execCommand('copy'); }
+    toast('Mensaje copiado. Pégalo en WhatsApp');
+  };
+  const recalcular = async (extra) => {
+    const r = await fetch('/api/plazo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo, datos, respuestas: { ...respuestas, ...extra } }) });
+    const j = await r.json();
+    if (!r.ok) return toast(j.error || 'No he podido recalcular');
+    pintarFicha(j.ficha, datos, card, { ...respuestas, ...extra }, editado ? ta.value : null);
+  };
+  card.querySelectorAll('[data-r]').forEach((b) => (b.onclick = () => recalcular({ cliente_es: b.dataset.r })));
+  const calc = card.querySelector('[data-calc]');
+  if (calc) calc.onclick = () => { const v = card.querySelector('[data-f]').value; if (v) recalcular({ fecha_recepcion: v }); else toast('Elige la fecha'); };
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script></body></html>

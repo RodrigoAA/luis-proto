@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "functions": {
+    "api/ficha.js": { "maxDuration": 60, "includeFiles": "{lib,data}/**" },
+    "api/plazo.js": { "maxDuration": 10, "includeFiles": "{lib,data}/**" }
+  }
+}
